@@ -1,0 +1,7 @@
+.qbtheme is the qbittorrent theme
+.rasi is the rofi theme
+hyprland conf is obv hyprland config
+init.lua is the nvim config
+kitty is the kitty conf
++ 2 wallpapers
+
