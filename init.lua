@@ -5,7 +5,7 @@ vim.cmd("set expandtab")
 vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
-vim.g.mapleader = "<C>"
+vim.g.mapleader = " "
 
 -------------------------------------------------------------------------------------
 
@@ -94,31 +94,8 @@ local plugins = {
     }
   },
 
-  --Sncaks
-  {
-  "folke/snacks.nvim",
-  priority = 1000,
-  lazy = false,
-  ---@type snacks.Config
-  opts = {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-    bigfile = { enabled = true },
-    dashboard = { enabled = true },
-    explorer = { enabled = true },
-    indent = { enabled = true },
-    input = { enabled = true },
-    picker = { enabled = true },
-    notifier = { enabled = true },
-    quickfile = { enabled = true },
-    scope = { enabled = true },
-    scroll = { enabled = true },
-    statuscolumn = { enabled = true },
-    words = { enabled = true },
-  },
-  },
-  --idk man
+  
+  --bufferline
   {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
 
   --miniicons
@@ -129,13 +106,146 @@ local plugins = {
 
 
 
+
+  --trouble (error thing)
+  {
+  "folke/trouble.nvim",
+  opts = {}, -- for default options, refer to the configuration section for custom setup.
+  cmd = "Trouble",
+  keys = {
+    {
+      "<leader>xx",
+      "<cmd>Trouble diagnostics toggle<cr>",
+      desc = "Diagnostics (Trouble)",
+    },
+    {
+      "<leader>xX",
+      "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+      desc = "Buffer Diagnostics (Trouble)",
+    },
+    {
+      "<leader>cs",
+      "<cmd>Trouble symbols toggle focus=false<cr>",
+      desc = "Symbols (Trouble)",
+    },
+    {
+      "<leader>cl",
+      "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+      desc = "LSP Definitions / references / ... (Trouble)",
+    },
+    {
+      "<leader>xL",
+      "<cmd>Trouble loclist toggle<cr>",
+      desc = "Location List (Trouble)",
+    },
+    {
+      "<leader>xQ",
+      "<cmd>Trouble qflist toggle<cr>",
+      desc = "Quickfix List (Trouble)",
+    },
+  },
+  },
+
+  --lualine
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' }
+  },
+
+
+  --persistence
+  -- Lua
+  {
+  "folke/persistence.nvim",
+  event = "BufReadPre", -- this will only start session saving when an actual file was opened
+  opts = {
+    -- add any custom options here
+  }
+  },
+
+  --autocompletemenuthing
+  {
+  'saghen/blink.cmp',
+  -- optional: provides snippets for the snippet source
+  dependencies = { 'rafamadriz/friendly-snippets' },
+
+  -- use a release tag to download pre-built binaries
+  version = '1.*',
+  -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+  -- build = 'cargo build --release',
+  -- If you use nix, you can build from source using latest nightly rust with:
+  -- build = 'nix run .#build-plugin',
+
+  ---@module 'blink.cmp'
+  ---@type blink.cmp.Config
+  opts = {
+    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
+    -- 'super-tab' for mappings similar to vscode (tab to accept)
+    -- 'enter' for enter to accept
+    -- 'none' for no mappings
+    --
+    -- All presets have the following mappings:
+    -- C-space: Open menu or open docs if already open
+    -- C-n/C-p or Up/Down: Select next/previous item
+    -- C-e: Hide menu
+    -- C-k: Toggle signature help (if signature.enabled = true)
+    --
+    -- See :h blink-cmp-config-keymap for defining your own keymap
+    keymap = { preset = 'super-tab' },
+
+    appearance = {
+      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+      -- Adjusts spacing to ensure icons are aligned
+      nerd_font_variant = 'mono'
+    },
+
+    -- (Default) Only show the documentation popup when manually triggered
+    completion = { documentation = { auto_show = false } },
+
+    -- Default list of enabled providers defined so that you can extend it
+    -- elsewhere in your config, without redefining it, due to `opts_extend`
+    sources = {
+      default = { 'lsp', 'path', 'snippets', 'buffer' },
+    },
+
+    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+    --
+    -- See the fuzzy documentation for more information
+    fuzzy = { implementation = "prefer_rust_with_warning" }
+  },
+  opts_extend = { "sources.default" }
+  },
+  
+
+  --dashboard
+    {
+    "goolord/alpha-nvim",
+    -- dependencies = { 'echasnovski/mini.icons' },
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      local startify = require("alpha.themes.startify")
+      -- available: devicons, mini, default is mini
+      -- if provider not loaded and enabled is true, it will try to use another provider
+      startify.file_icons.provider = "devicons"
+      require("alpha").setup(
+        startify.config
+      )
+    end,
+  },
+
+
+  --window manager thing
+  
+
+
   { "AckslD/nvim-neoclip.lua" },
   { "karb94/neoscroll.nvim" },
   { "jim-fx/sudoku.nvim" },
   { "alec-gibson/nvim-tetris" },
   { "ThePrimeagen/vim-be-good" },
   { "saxon1964/neovim-tips" },
-
 
 
 
@@ -182,7 +292,7 @@ local opts = {
 
 
 
---i have no fucking clue omg
+  --i have no fucking clue omg
   lsp = {
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
@@ -208,6 +318,16 @@ local opts = {
     command_palette = true,
     long_message_to_split = true,
   },
+
+
+  --daash
+
+
+
+
+
+
+
 }
 
 
@@ -295,5 +415,62 @@ require('neoclip').setup({
   },
 })
 --
-
+vim.opt.termguicolors = true
+require("bufferline").setup{}
+--
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {
+      statusline = {},
+      winbar = {},
+    },
+    ignore_focus = {},
+    always_divide_middle = true,
+    always_show_tabline = true,
+    globalstatus = false,
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+      refresh_time = 16, -- ~60fps
+      events = {
+        'WinEnter',
+        'BufEnter',
+        'BufWritePost',
+        'SessionLoadPost',
+        'FileChangedShellPost',
+        'VimResized',
+        'Filetype',
+        'CursorMoved',
+        'CursorMovedI',
+        'ModeChanged',
+      },
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
+--
 
