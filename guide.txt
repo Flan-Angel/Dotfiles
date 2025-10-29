@@ -3,5 +3,6 @@
 hyprland conf is obv hyprland config
 init.lua is the nvim config
 kitty is the kitty conf
+config.kdl is niri config
 + 2 wallpapers
 
