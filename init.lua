@@ -1,86 +1,114 @@
---My Config 
+--here we fucking go again
 
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
-------------------------------------------------
-
---lazy nvim
+vim.cmd("set number")
+-----------------------------------------------------------------------------------
+--Lazy nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
-{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-{ out, "WarningMsg" },
-{ "\nPress any key to exit..." },
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
     os.exit(1)
   end
 end
 vim.opt.rtp:prepend(lazypath)
--- Make sure to setup `mapleader` and `maplocalleader` before
--- loading lazy.nvim so that mappings are correct.
--- This is also a good place to setup other settings (vim.opt)
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-
-------------------------------------------------
+-----------------------------------------------------------------------------------
+--PLUGINS
 local plugins = {
- 
-  --COLOURSCHEMES
-  { "dgox16/oldworld.nvim" },
-  { "shaunsingh/nord.nvim" },
-  { "kdheepak/monochrome.nvim" },
-  { "dark-orchid/neovim" },
-  { "maxmx03/fluoromachine.nvim"},
-  { "catppuccin/nvim" },
-  { "EdenEast/nightfox.nvim" },
-  { "olimorris/onedarkpro.nvim" },
-  { "scottmckendry/cyberdream.nvim" }, 
-  { "eldritch-theme/eldritch.nvim" },
-  { "uloco/bluloco.nvim" }, 
-  { "shaunsingh/moonlight.nvim" }, 
-  { "datsfilipe/vesper.nvim" },
-  { "samharju/synthweave.nvim" },  
-  { "Tsuzat/NeoSolarized.nvim" },
-  { "ficcdaf/ashen.nvim" },
-  { "sekke276/dark_flat.nvim" },
-  { "sainnhe/everforest" },
 
+  {"dgox16/oldworld.nvim",
+  lazy = false},
+  {"shaunsingh/nord.nvim",
+  lazy = false},
+  {"kdheepak/monochrome.nvim",
+  lazy = false},
+  {"dark-orchid/neovim", 
+  lazy = false},
+  {"maxmx03/fluoromachine.nvim",
+  lazy = false},
+  {"catppuccin/nvim",
+  lazy = false},
+  {"EdenEast/nightfox.nvim",
+  lazy = false},
+  {"olimorris/onedarkpro.nvim",
+  lazy = false},
+  {"scottmckendry/cyberdream.nvim",
+  lazy = false},
   {
-    "erl-koenig/theme-hub.nvim",
-    dependencies = {
-        "nvim-lua/plenary.nvim",
-        -- Optional: for themes that use lush (will be notified if a theme requires it)
-        -- "rktjmp/lush.nvim"
-    },
+    "eldritch-theme/eldritch.nvim",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-        require("theme-hub").setup({
-            -- Configuration options (see below)
-        })
+      -- load the colorscheme here
+      vim.cmd([[colorscheme eldritch]])
     end,
   },
+  {"uloco/bluloco.nvim", 
+  lazy = false},
+  {"shaunsingh/moonlight.nvim",
+  lazy = false},
+  {"datsfilipe/vesper.nvim",
+  lazy = false},
+  {"samharju/synthweave.nvim", 
+  lazy = false},
+  {"Tsuzat/NeoSolarized.nvim", 
+  lazy = false},
+  {"ficcdaf/ashen.nvim", 
+  lazy = false},
+  {"sekke276/dark_flat.nvim", 
+  lazy = false},
+  {"sainnhe/everforest",
+  lazy = false},
 
-  
-  
-  --telescope
+
+--TREESITTER
+  {"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate"},
+
+--WHICHKEY
+  {
+  "folke/which-key.nvim",
+  event = "VeryLazy",
+  opts = {
+    preset = "helix",
+  },
+  keys = {
+    {
+      "<leader>h",
+      function()
+        require("which-key").show({ global = true })
+      end,
+      desc = "Buffer Local Keymaps (which-key)",
+      },
+    },
+  },
+
+--TELESCOPE
   {
     'nvim-telescope/telescope.nvim', tag = '0.1.8',
-      dependencies = { 'nvim-lua/plenary.nvim' }
+    dependencies = { 'nvim-lua/plenary.nvim' }
   },
-   
-  --autopair
+
+--AUTOPAIRS
   {
     'windwp/nvim-autopairs',
     event = "InsertEnter",
     config = true
   },
-  
-  --neotree                                                                                   
+
+--NEOTREE
   {                                                                                             
     "nvim-neo-tree/neo-tree.nvim",                                                              
     branch = "v3.x",                                                                            
@@ -92,7 +120,7 @@ local plugins = {
     lazy = false, -- neo-tree will lazily load itself   
     keys = {
       {
-        "<leader>j",
+        "<leader>o",
         function()
           require("neo-tree.command").execute({
             toggle = true,
@@ -105,10 +133,7 @@ local plugins = {
     }
   },
   
-   --treesitter                                                                               
- {"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate"},
-
-  --noice GUI
+--NOICE GUI
   {
   "folke/noice.nvim",
   event = "VeryLazy",
@@ -120,19 +145,17 @@ local plugins = {
     "rcarriga/nvim-notify",
     }
   },
- 
 
-
- --bufferline   
+--BUFFERLINE
  {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
 
- --lualine
+--LUALINE
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
 
-  --Blink.Cmp
+--BLINK.CMP (auto complete suggestions)
   {
   'saghen/blink.cmp',
   dependencies = { 'rafamadriz/friendly-snippets' },
@@ -177,34 +200,7 @@ local plugins = {
   opts_extend = { "sources.default" }
   },
 
-  --Dashboard
-  {                                                                                           
-    "goolord/alpha-nvim",                                                                       
-    -- dependencies = { 'echasnovski/mini.icons' },                                             
-    dependencies = { 'nvim-tree/nvim-web-devicons' },                                           
-    config = function()                                                                         
-      local startify = require("alpha.themes.startify")                                         
-      -- available: devicons, mini, default is mini                                             
-      -- if provider not loaded and enabled is true, it will try to use another provider        
-      startify.file_icons.provider = "devicons"                                                 
-      require("alpha").setup(                                                                   
-        startify.config                                                                         
-      )                                                                                         
-    end,                                                                                        
-  },                                                                                            
-  
-
-  --persistencd
-  {                                                                                             
-  "folke/persistence.nvim",                                                                     
-  event = "BufReadPre", -- this will only start session saving when an actual file was opened   
-  opts = {                                                                                      
-    -- add any custom options here                                                              
-  }                                                                                             
-  },
-
-
-  --Trouble
+--TROUBLE (shows errors in file or something)
   {
   "folke/trouble.nvim",
   opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -243,96 +239,190 @@ local plugins = {
   },
   },
 
-  --code runner
-  { "CRAG666/code_runner.nvim", config = true },
 
-  --Neoclip
+-- SNACKS
   {
-  "AckslD/nvim-neoclip.lua",
-  dependencies = {
-    -- you'll need at least one of these
-     {'nvim-telescope/telescope.nvim'},
-    -- {'ibhagwan/fzf-lua'},
-  },
-  config = function()
-    require('neoclip').setup()
-  end,
-  },
-
-
-  --Whichkey
-  {
-  "folke/which-key.nvim",
-  event = "VeryLazy",
+  "folke/snacks.nvim",
+  priority = 1000,
+  lazy = false,
+  ---@type snacks.Config
   opts = {
     -- your configuration comes here
     -- or leave it empty to use the default settings
     -- refer to the configuration section below
-  },
-  keys = {
+    bigfile = { enabled = true},
+    dashboard = {
+        preset = {
+          header = [[
+⠀⠀⠀⠀⠀⠀⠀⣠⡤⠶⡄⠀⠀⠀⠀⠀⠀⠀⢠⠶⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⣴⣿⡟⠀⠈⣀⣾⣝⣯⣿⣛⣷⣦⡀⠀⠈⢿⣿⣦⡀⠀⠀⠀⠀
+⠀⠀⠀⣴⣿⣿⣿⡇⠀⢼⣿⣽⣿⢻⣿⣻⣿⣟⣷⡄⠀⢸⣿⣿⣾⣄⠀⠀⠀
+⠀⠀⣞⣿⣿⣿⣿⣷⣤⣸⣟⣿⣿⣻⣯⣿⣿⣿⣿⣀⣴⣿⣿⣿⣿⣯⣆⠀⠀
+⠀⡼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣜⡆⠀
+⢠⣟⣯⣿⣿⣿⣷⢿⣫⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣬⣟⠿⣿⣿⣿⣿⡷⣾⠀
+⢸⣯⣿⣿⡏⠙⡇⣾⣟⣿⡿⢿⣿⣿⣿⣿⣿⢿⣟⡿⣿⠀⡟⠉⢹⣿⣿⢿⡄
+⢸⣯⡿⢿⠀⠀⠱⢈⣿⢿⣿⡿⣏⣿⣿⣿⣿⣿⣿⣿⣿⣀⠃⠀⢸⡿⣿⣿⡇
+⢸⣿⣇⠈⢃⣴⠟⠛⢉⣸⣇⣹⣿⣿⠚⡿⣿⣉⣿⠃⠈⠙⢻⡄⠎⠀⣿⡷⠃
+⠈⡇⣿⠀⠀⠻⣤⠠⣿⠉⢻⡟⢷⣝⣷⠉⣿⢿⡻⣃⢀⢤⢀⡏⠀⢠⡏⡼⠀
+⠀⠘⠘⡅⠀⣔⠚⢀⣉⣻⡾⢡⡾⣻⣧⡾⢃⣈⣳⢧⡘⠤⠞⠁⠀⡼⠁⠀⠀
+⠀⠀⠀⠸⡀⠀⢠⡎⣝⠉⢰⠾⠿⢯⡘⢧⡧⠄⠀⡄⢻⠀⠀⠀⢰⠁⠀⠀⠀
+⠀⠀⠀⠀⠁⠀⠈⢧⣈⠀⠘⢦⠀⣀⠇⣼⠃⠰⣄⣡⠞⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⢤⠼⠁⠀⠀⠳⣤⡼⠀⠀⠀⠀⠀⠀
+          ]],
+        },
+    sections = {
+    { section = "header" },
     {
-      "<leader>?",
-      function()
-        require("which-key").show({ global = false })
-      end,
-      desc = "Buffer Local Keymaps (which-key)",
+      pane = 2,
+      section = "header",
+      height = 5,
+      padding = 1,
     },
+    { section = "keys", gap = 1, padding = 1 },
+    { pane = 2, icon = " ", title = "Recent Files", section = "recent_files", indent = 2, padding = 1 },
+    { pane = 2, icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
+    {
+      pane = 2,
+      icon = " ",
+      title = "Git Status",
+      section = "terminal",
+      enabled = function()
+        return Snacks.git.get_root() ~= nil
+      end,
+      cmd = "git status --short --branch --renames",
+      height = 5,
+      padding = 1,
+      ttl = 5 * 60,
+      indent = 3,
+    },
+    { section = "startup" },
   },
-  },
-
-  --MISC
-  { "karb94/neoscroll.nvim" },                                                                
-  { "jim-fx/sudoku.nvim" },                                                                     
-  { "alec-gibson/nvim-tetris" },                                                                
-  { "ThePrimeagen/vim-be-good" },                                                               
-  { "saxon1964/neovim-tips" },
-
-  
 
 	
+	},
+    explorer = { enabled = true},
+    indent = { enabled = false },
+    input = { enabled = false },
+    picker = { enabled = true},
+    notifier = { enabled = true },
+    quickfile = { enabled = true},
+    scope = { enabled = true},
+    scroll = { enabled = true },
+    statuscolumn = { enabled = true },
+    words = { enabled = true },
+  },
+},
+
+
+--MISC
+{ "CRAG666/code_runner.nvim", config = true },
+{ "jim-fx/sudoku.nvim" },             
+{ "karb94/neoscroll.nvim" },                                                              
+{ "alec-gibson/nvim-tetris" },                                                            
+{ "ThePrimeagen/vim-be-good" },                                                         
+{ "saxon1964/neovim-tips" },
+
 
 
 }
-------------------------------------------------
+-----------------------------------------------------------------------------------
 local opts = {
- install = { colorscheme = { "fluoromachine" } },
- checker = { enabled = true },
-  
+
+
 
 
 
 }
-  
-------------------------------------------------
-------------------------------------------------
-------------------------------------------------
-------------------------------------------------
-------------------------------------------------
-------------------------------------------------
---Nvim STUP
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------
+--CONFIGS \/
+-----------------------------------------------------------------------------------
+--LAZY-NVIM SETUP
 require("lazy").setup(plugins, opts)
-------------------------------------------------
---Telescope
+-----------------------------------------------------------------------------------
+--TREESITTER
+local config = require("nvim-treesitter.configs")
+ config.setup ({
+   ensure_installed = { "c", "bash", "lua", "cmake", "gdscript", "hyprlang" },
+   highlight = { enable = true },
+   indent = { enable = true },
+ })
+-----------------------------------------------------------------------------------
+--WHICHKEY
+local wk = require("which-key")
+wk.add({
+    
+--  { "<leader>f", group = "file" }, -- group
+--  { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find File", mode = "n" },
+--  { "<leader>fb", function() print("hello") end, desc = "Foobar" },
+--  { "<leader>fn", desc = "New File" },
+--  { "<leader>f1", hidden = true }, -- hide this keymap
+  { "<leader>w", proxy = "<c-w>", group = "windows" }, -- proxy to window mappings
+  { "<leader>b", group = "buffers", expand = function()
+      return require("which-key.extras").expand.buf()
+    end
+  },
+  {
+    -- Nested mappings are allowed and can be added in any order
+    -- Most attributes can be inherited or overridden on any level
+    -- There's no limit to the depth of nesting
+    mode = { "n", "v" }, -- NORMAL and VISUAL mode
+--    { "<leader>q", "<cmd>q<cr>", desc = "Quit" }, -- no need to specify mode since it's inherited
+--    { "<leader>w", "<cmd>w<cr>", desc = "Write" },
+  }
+})
+-----------------------------------------------------------------------------------
+--TELESCOPE
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>o', builtin.find_files, {})
-vim.keymap.set('n', '<leader>f', builtin.live_grep,  {})
-vim.keymap.set('n', '<leader>p', builtin.colorscheme, {})
-vim.keymap.set('n', '<leader>m', builtin.man_pages, {})
-vim.keymap.set('n', '<leader>k', builtin.keymaps, {})
-------------------------------------------------
---Treesitter
-local config = require("nvim-treesitter.configs")                                               
-config.setup ({                                                                                 
-  ensure_installed = { "c", "bash", "lua" },                                                    
-  highlight = { enable = true },                                                                
-  indent = { enable = true },                                                                   
-})   
-------------------------------------------------
---Bufferline
+vim.keymap.set('n', '<leader>g', builtin.find_files, {desc = 'find files'})
+vim.keymap.set('n', '<leader>f', builtin.live_grep,  {desc = 'live grep'})
+vim.keymap.set('n', '<leader>c', builtin.colorscheme, {desc = 'switch colorscheme'})
+vim.keymap.set('n', '<leader>m', builtin.man_pages, {desc = 'Man-Pages'})
+vim.keymap.set('n', '<leader>k', builtin.keymaps, {desc = 'Keymaps? why tho'})
+vim.keymap.set('n', '<leader>r', builtin.registers, {desc = 'registers/system clipboard'})
+-----------------------------------------------------------------------------------
+--NOICE GUI
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = true, -- use a classic bottom cmdline for search
+    command_palette = true, -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false, -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = true, -- add a border to hover docs and signature help
+  },
+})
+
+  local noice = require("noice")
+  noice.setup({
+    routes = {
+      {
+        view = "notify",
+        filter = { event = "msg_showmode" },
+      },
+    },
+  })
+
+-----------------------------------------------------------------------------------
+--BUFFERLINE
 vim.opt.termguicolors = true
 require("bufferline").setup{}
-------------------------------------------------
---Lualine
+-----------------------------------------------------------------------------------
+--LUALINE
 require('lualine').setup {
   options = {
     icons_enabled = true,
@@ -387,111 +477,25 @@ require('lualine').setup {
   inactive_winbar = {},
   extensions = {}
 }
-------------------------------------------------
---NOICE
-require("noice").setup({
-  lsp = {
-    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-    override = {
-      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-      ["vim.lsp.util.stylize_markdown"] = true,
-      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-    },
-  },
-  -- you can enable a preset for easier configuration
-  presets = {
-    bottom_search = true, -- use a classic bottom cmdline for search
-    command_palette = true, -- position the cmdline and popupmenu together
-    long_message_to_split = true, -- long messages will be sent to a split
-    inc_rename = false, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = true, -- add a border to hover docs and signature help
-  },
-})
+-----------------------------------------------------------------------------------
 
-  local noice = require("noice")
-  noice.setup({
-    routes = {
-      {
-        view = "notify",
-        filter = { event = "msg_showmode" },
-      },
-    },
-  })
-------------------------------------------------
---Neoclip
-require('neoclip').setup({
-  history = 1000,
-  enable_persistent_history = true,
-  length_limit = 1048576,
-  continuous_sync = false,
-  db_path = vim.fn.stdpath("data") .. "/databases/neoclip.sqlite3",
-  filter = nil,
-  preview = true,
-  prompt = nil,
-  default_register = '"',
-  default_register_macros = 'q',
-  enable_macro_history = true,
-  content_spec_column = false,
-  disable_keycodes_parsing = false,
-  dedent_picker_display = false,
-  initial_mode = 'insert',
-  on_select = {
-	move_to_front = false,
-	close_telescope = true,
-  },
-  on_paste = {
-	set_reg = false,
-	move_to_front = false,
-	close_telescope = true,
-  },
-  on_replay = {
-	set_reg = false,
-	move_to_front = false,
-	close_telescope = true,
-  },
-  on_custom_action = {
-	close_telescope = true,
-  },
-  keys = {
-	telescope = {
-	  i = {
-		select = '<cr>',
-		paste = '<c-p>',
-		paste_behind = '<c-k>',
-		replay = '<c-q>',  -- replay a macro
-		delete = '<c-d>',  -- delete an entry
-		edit = '<c-e>',  -- edit an entry
-		custom = {},
-	  },
-	  n = {
-		select = '<cr>',
-		paste = 'p',
-		--- It is possible to map to more than one key.
-		-- paste = { 'p', '<c-p>' },
-		paste_behind = 'P',
-		replay = 'q',
-		delete = 'd',
-		edit = 'e',
-		custom = {},
-	  },
-	},
-	fzf = {
-	  select = 'default',
-	  paste = 'ctrl-p',
-	  paste_behind = 'ctrl-k',
-	  custom = {},
-	},
-  },
-})
+  local logo = [[
+⠀⠀⠀⠀⠀⠀⠀⣠⡤⠶⡄⠀⠀⠀⠀⠀⠀⠀⢠⠶⣦⣀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⢀⣴⣿⡟⠀⠈⣀⣾⣝⣯⣿⣛⣷⣦⡀⠀⠈⢿⣿⣦⡀⠀⠀⠀⠀
+⠀⠀⠀⣴⣿⣿⣿⡇⠀⢼⣿⣽⣿⢻⣿⣻⣿⣟⣷⡄⠀⢸⣿⣿⣾⣄⠀⠀⠀
+⠀⠀⣞⣿⣿⣿⣿⣷⣤⣸⣟⣿⣿⣻⣯⣿⣿⣿⣿⣀⣴⣿⣿⣿⣿⣯⣆⠀⠀
+⠀⡼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣜⡆⠀
+⢠⣟⣯⣿⣿⣿⣷⢿⣫⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣬⣟⠿⣿⣿⣿⣿⡷⣾⠀
+⢸⣯⣿⣿⡏⠙⡇⣾⣟⣿⡿⢿⣿⣿⣿⣿⣿⢿⣟⡿⣿⠀⡟⠉⢹⣿⣿⢿⡄
+⢸⣯⡿⢿⠀⠀⠱⢈⣿⢿⣿⡿⣏⣿⣿⣿⣿⣿⣿⣿⣿⣀⠃⠀⢸⡿⣿⣿⡇
+⢸⣿⣇⠈⢃⣴⠟⠛⢉⣸⣇⣹⣿⣿⠚⡿⣿⣉⣿⠃⠈⠙⢻⡄⠎⠀⣿⡷⠃
+⠈⡇⣿⠀⠀⠻⣤⠠⣿⠉⢻⡟⢷⣝⣷⠉⣿⢿⡻⣃⢀⢤⢀⡏⠀⢠⡏⡼⠀
+⠀⠘⠘⡅⠀⣔⠚⢀⣉⣻⡾⢡⡾⣻⣧⡾⢃⣈⣳⢧⡘⠤⠞⠁⠀⡼⠁⠀⠀
+⠀⠀⠀⠸⡀⠀⢠⡎⣝⠉⢰⠾⠿⢯⡘⢧⡧⠄⠀⡄⢻⠀⠀⠀⢰⠁⠀⠀⠀
+⠀⠀⠀⠀⠁⠀⠈⢧⣈⠀⠘⢦⠀⣀⠇⣼⠃⠰⣄⣡⠞⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⢤⠼⠁⠀⠀⠳⣤⡼⠀⠀⠀⠀⠀⠀
+    ]]
 
-------------------------------------------------
---theme-hub
-require("theme-hub").setup({
-    install_dir = vim.fn.stdpath("data") .. "/theme-hub",
-    auto_install_on_select = true,
-    apply_after_install = true,
-    persistent = true,
-})
-------------------------------------------------
-------------------------------------------------
-------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
