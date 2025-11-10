@@ -1,10 +1,13 @@
 --here we fucking go again
-
+-----------------------------------------------------------------------------------
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set number")
+vim.keymap.set('n', '<F8>', '<cmd>split <cr>')
+vim.keymap.set('n', '<F7>', '<cmd>vsplit <cr>')
+vim.keymap.set('n', '<F9>', '<cmd>Gitstatus <cr>')
 -----------------------------------------------------------------------------------
 --Lazy nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -29,6 +32,14 @@ vim.g.maplocalleader = " "
 --PLUGINS
 local plugins = {
 
+  {
+    "folke/tokyonight.nvim",
+    lazy = false, -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      vim.cmd([[colorscheme nord]])
+    end,
+  },
   {"dgox16/oldworld.nvim",
   lazy = false},
   {"shaunsingh/nord.nvim",
@@ -40,22 +51,15 @@ local plugins = {
   {"maxmx03/fluoromachine.nvim",
   lazy = false},
   {"catppuccin/nvim",
-  lazy = false},
+  lazy =false},
   {"EdenEast/nightfox.nvim",
   lazy = false},
   {"olimorris/onedarkpro.nvim",
   lazy = false},
   {"scottmckendry/cyberdream.nvim",
   lazy = false},
-  {
-    "eldritch-theme/eldritch.nvim",
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- load the colorscheme here
-      vim.cmd([[colorscheme eldritch]])
-    end,
-  },
+  {"eldritch-theme/eldritch.nvim",
+  lazy = false},
   {"uloco/bluloco.nvim", 
   lazy = false},
   {"shaunsingh/moonlight.nvim",
@@ -314,6 +318,18 @@ local plugins = {
 },
 
 
+--GIT
+{
+  'Mauritz8/gitstatus.nvim',
+  -- optional dependencies
+  dependencies = {
+    'nvim-tree/nvim-web-devicons', -- displays filetype icons
+    -- 'nvim-mini/mini.icons' -- use mini.icons instead if you prefer
+    'rcarriga/nvim-notify', -- displays nice notifications
+  },
+},
+
+
 --MISC
 { "CRAG666/code_runner.nvim", config = true },
 { "jim-fx/sudoku.nvim" },             
@@ -380,8 +396,8 @@ wk.add({
 -----------------------------------------------------------------------------------
 --TELESCOPE
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>g', builtin.find_files, {desc = 'find files'})
-vim.keymap.set('n', '<leader>f', builtin.live_grep,  {desc = 'live grep'})
+vim.keymap.set('n', '<leader>f', builtin.find_files, {desc = 'find files'})
+vim.keymap.set('n', '<leader>l', builtin.live_grep,  {desc = 'live grep'})
 vim.keymap.set('n', '<leader>c', builtin.colorscheme, {desc = 'switch colorscheme'})
 vim.keymap.set('n', '<leader>m', builtin.man_pages, {desc = 'Man-Pages'})
 vim.keymap.set('n', '<leader>k', builtin.keymaps, {desc = 'Keymaps? why tho'})
@@ -477,25 +493,6 @@ require('lualine').setup {
   inactive_winbar = {},
   extensions = {}
 }
------------------------------------------------------------------------------------
-
-  local logo = [[
-⠀⠀⠀⠀⠀⠀⠀⣠⡤⠶⡄⠀⠀⠀⠀⠀⠀⠀⢠⠶⣦⣀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⢀⣴⣿⡟⠀⠈⣀⣾⣝⣯⣿⣛⣷⣦⡀⠀⠈⢿⣿⣦⡀⠀⠀⠀⠀
-⠀⠀⠀⣴⣿⣿⣿⡇⠀⢼⣿⣽⣿⢻⣿⣻⣿⣟⣷⡄⠀⢸⣿⣿⣾⣄⠀⠀⠀
-⠀⠀⣞⣿⣿⣿⣿⣷⣤⣸⣟⣿⣿⣻⣯⣿⣿⣿⣿⣀⣴⣿⣿⣿⣿⣯⣆⠀⠀
-⠀⡼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣜⡆⠀
-⢠⣟⣯⣿⣿⣿⣷⢿⣫⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣬⣟⠿⣿⣿⣿⣿⡷⣾⠀
-⢸⣯⣿⣿⡏⠙⡇⣾⣟⣿⡿⢿⣿⣿⣿⣿⣿⢿⣟⡿⣿⠀⡟⠉⢹⣿⣿⢿⡄
-⢸⣯⡿⢿⠀⠀⠱⢈⣿⢿⣿⡿⣏⣿⣿⣿⣿⣿⣿⣿⣿⣀⠃⠀⢸⡿⣿⣿⡇
-⢸⣿⣇⠈⢃⣴⠟⠛⢉⣸⣇⣹⣿⣿⠚⡿⣿⣉⣿⠃⠈⠙⢻⡄⠎⠀⣿⡷⠃
-⠈⡇⣿⠀⠀⠻⣤⠠⣿⠉⢻⡟⢷⣝⣷⠉⣿⢿⡻⣃⢀⢤⢀⡏⠀⢠⡏⡼⠀
-⠀⠘⠘⡅⠀⣔⠚⢀⣉⣻⡾⢡⡾⣻⣧⡾⢃⣈⣳⢧⡘⠤⠞⠁⠀⡼⠁⠀⠀
-⠀⠀⠀⠸⡀⠀⢠⡎⣝⠉⢰⠾⠿⢯⡘⢧⡧⠄⠀⡄⢻⠀⠀⠀⢰⠁⠀⠀⠀
-⠀⠀⠀⠀⠁⠀⠈⢧⣈⠀⠘⢦⠀⣀⠇⣼⠃⠰⣄⣡⠞⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⢤⠼⠁⠀⠀⠳⣤⡼⠀⠀⠀⠀⠀⠀
-    ]]
-
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
