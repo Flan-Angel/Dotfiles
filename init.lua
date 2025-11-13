@@ -37,7 +37,7 @@ local plugins = {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      vim.cmd([[colorscheme nord]])
+      vim.cmd([[colorscheme everforest]])
     end,
   },
   {"dgox16/oldworld.nvim",
@@ -365,7 +365,7 @@ require("lazy").setup(plugins, opts)
 --TREESITTER
 local config = require("nvim-treesitter.configs")
  config.setup ({
-   ensure_installed = { "c", "bash", "lua", "cmake", "gdscript", "hyprlang" },
+   ensure_installed = { "c", "bash", "lua", "cmake", "gdscript", "hyprlang", "asm", "python", "cpp", "dockerfile", "vim", "vimdoc" },
    highlight = { enable = true },
    indent = { enable = true },
  })
