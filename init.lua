@@ -1,13 +1,36 @@
 --here we fucking go again
+
 -----------------------------------------------------------------------------------
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.cmd("set number")
-vim.keymap.set('n', '<F8>', '<cmd>split <cr>')
-vim.keymap.set('n', '<F7>', '<cmd>vsplit <cr>')
-vim.keymap.set('n', '<F9>', '<cmd>Gitstatus <cr>')
+
+--
+--KEYBINDS  
+--
+--
+--
+--
+--
+--
+--Games 
+vim.keymap.set('n', '<leader>Gp', '<cmd>Playtime <cr>')
+vim.keymap.set('n', '<leader>Gs', '<cmd>Sudoku <cr>')
+vim.keymap.set('n', '<leader>Gv', '<cmd>VimBeGood <cr>')
+vim.keymap.set('n', '<leader>Gt', '<cmd>Tetris <cr>')
+vim.keymap.set('n', '<leader>Gr', '<cmd>CellularAutomaton make_it_rain <cr>')
+vim.keymap.set('n', '<leader>Gl', '<cmd>CellularAutomaton game_of_life <cr>')
+--
+vim.keymap.set('n', '<leader>.', '<cmd>split <cr>')
+vim.keymap.set('n', '<leader>,', '<cmd>vsplit <cr>')
+vim.keymap.set('n', '<F7>', '<cmd>SunglassesEnableToggle <cr>')
+vim.keymap.set('n', '<leader>j', '<cmd>:LuxtermToggle <cr>')
+vim.keymap.set('n', '<leader>N', '<cmd>Telekasten <cr>')
+vim.keymap.set('n', '<leader>n', '<cmd>Telekasten new_note<cr>')
 -----------------------------------------------------------------------------------
 --Lazy nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -25,9 +48,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   end
 end
 vim.opt.rtp:prepend(lazypath)
-
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
 -----------------------------------------------------------------------------------
 --PLUGINS
 local plugins = {
@@ -37,16 +57,10 @@ local plugins = {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      vim.cmd([[colorscheme everforest]])
+      vim.cmd([[colorscheme moonlight]])
     end,
   },
   {"dgox16/oldworld.nvim",
-  lazy = false},
-  {"shaunsingh/nord.nvim",
-  lazy = false},
-  {"kdheepak/monochrome.nvim",
-  lazy = false},
-  {"dark-orchid/neovim", 
   lazy = false},
   {"maxmx03/fluoromachine.nvim",
   lazy = false},
@@ -54,21 +68,9 @@ local plugins = {
   lazy =false},
   {"EdenEast/nightfox.nvim",
   lazy = false},
-  {"olimorris/onedarkpro.nvim",
-  lazy = false},
-  {"scottmckendry/cyberdream.nvim",
-  lazy = false},
   {"eldritch-theme/eldritch.nvim",
   lazy = false},
-  {"uloco/bluloco.nvim", 
-  lazy = false},
   {"shaunsingh/moonlight.nvim",
-  lazy = false},
-  {"datsfilipe/vesper.nvim",
-  lazy = false},
-  {"samharju/synthweave.nvim", 
-  lazy = false},
-  {"Tsuzat/NeoSolarized.nvim", 
   lazy = false},
   {"ficcdaf/ashen.nvim", 
   lazy = false},
@@ -76,7 +78,16 @@ local plugins = {
   lazy = false},
   {"sainnhe/everforest",
   lazy = false},
-
+  {"uhs-robert/oasis.nvim",
+  lazy = false},
+  {"wurli/cobalt.nvim",
+  lazy = false,},
+  {"everviolet/nvim", name = 'evergarden',
+  lazy = false},
+  { "zootedb0t/citruszest.nvim",
+  lazy = false,},
+  {"samharju/serene.nvim",
+  lazy = false,},
 
 --TREESITTER
   {"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate"},
@@ -129,7 +140,7 @@ local plugins = {
           require("neo-tree.command").execute({
             toggle = true,
             source = "filesystem",
-            position = "left",
+            position = "right",
           })
         end,
         desc = "Buffers (root dir)",
@@ -152,6 +163,7 @@ local plugins = {
 
 --BUFFERLINE
  {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
+
 
 --LUALINE
   {
@@ -203,6 +215,7 @@ local plugins = {
   },
   opts_extend = { "sources.default" }
   },
+
 
 --TROUBLE (shows errors in file or something)
   {
@@ -318,25 +331,77 @@ local plugins = {
 },
 
 
---GIT
+
+
+-- Colourful auto complete suggestions
+
+--TRIFORCE
 {
-  'Mauritz8/gitstatus.nvim',
-  -- optional dependencies
+  "gisketch/triforce.nvim",
   dependencies = {
-    'nvim-tree/nvim-web-devicons', -- displays filetype icons
-    -- 'nvim-mini/mini.icons' -- use mini.icons instead if you prefer
-    'rcarriga/nvim-notify', -- displays nice notifications
+    "nvzone/volt",
   },
+  config = function()
+    require("triforce").setup({
+      -- Optional: Add your configuration here
+      keymap = {
+        show_profile = "<leader>p", -- Open profile with <leader>tp
+      },
+    })
+  end,
 },
+
+--Terminal?
+  {
+  "luxvim/nvim-luxterm",
+  config = function()
+    require("luxterm").setup({
+      -- Optional configuration
+      manager_width = 0.8,
+      manager_height = 0.8,
+      preview_enabled = true,
+      auto_hide = true,
+      keymaps = {
+        toggle_manager = "<C-/>",
+      }
+    })
+  end
+  },
+
+--Notes
+  {
+    'renerocksai/telekasten.nvim',
+    dependencies = {'nvim-telescope/telescope.nvim'}
+  },
+
 
 
 --MISC
 { "CRAG666/code_runner.nvim", config = true },
-{ "jim-fx/sudoku.nvim" },             
-{ "karb94/neoscroll.nvim" },                                                              
+
+{"rktjmp/playtime.nvim"},  
+{
+  'jim-fx/sudoku.nvim',
+  cmd = "Sudoku",
+  config = function()
+    require("sudoku").setup({
+      -- configuration ...
+    })
+  end
+},
 { "alec-gibson/nvim-tetris" },                                                            
 { "ThePrimeagen/vim-be-good" },                                                         
+{"eandrju/cellular-automaton.nvim"},
+
+
+{ "karb94/neoscroll.nvim" },                                                              
 { "saxon1964/neovim-tips" },
+{"miversen33/sunglasses.nvim",
+  config = true,
+  filter_type = "SHADE", -- "SHADE" "TINT" "NOSYNTAX"
+  filter_percent = 0.05, 
+},
+
 
 
 
@@ -395,10 +460,18 @@ wk.add({
 })
 -----------------------------------------------------------------------------------
 --TELESCOPE
+require "telescope".setup {
+  pickers = {
+    colorscheme = {
+      enable_preview = true
+    }
+  }
+}
+--
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', builtin.find_files, {desc = 'find files'})
 vim.keymap.set('n', '<leader>l', builtin.live_grep,  {desc = 'live grep'})
-vim.keymap.set('n', '<leader>c', builtin.colorscheme, {desc = 'switch colorscheme'})
+vim.keymap.set('n', '<leader>t', builtin.colorscheme, {desc = 'switch colorscheme'})
 vim.keymap.set('n', '<leader>m', builtin.man_pages, {desc = 'Man-Pages'})
 vim.keymap.set('n', '<leader>k', builtin.keymaps, {desc = 'Keymaps? why tho'})
 vim.keymap.set('n', '<leader>r', builtin.registers, {desc = 'registers/system clipboard'})
@@ -429,7 +502,7 @@ require("noice").setup({
       {
         view = "notify",
         filter = { event = "msg_showmode" },
-      },
+      }, 
     },
   })
 
@@ -493,6 +566,83 @@ require('lualine').setup {
   inactive_winbar = {},
   extensions = {}
 }
+-----------------------------------------------------------------------------------
+--TRIFORCE
+require("triforce").setup({
+  enabled = true,              -- Enable/disable the entire plugin
+  gamification_enabled = true, -- Enable XP, levels, achievements
+
+  -- Notification settings
+  notifications = {
+    enabled = true,       -- Master toggle for all notifications
+    level_up = true,      -- Show level up notifications
+    achievements = true,  -- Show achievement unlock notifications
+  },
+
+  -- Keymap configuration
+  keymap = {
+    show_profile = "<leader>p", -- Set to nil to disable default keymap
+  },
+
+  -- Auto-save interval (in seconds)
+  auto_save_interval = 300, -- Save stats every 5 minutes
+
+  -- Add custom language support
+  custom_languages = {
+    gleam = { icon = "✨", name = "Gleam" },
+    odin = { icon = "🔷", name = "Odin" },
+    -- Add more languages...
+  },
+
+  -- Customize level progression (optional)
+  level_progression = {
+    tier_1 = { min_level = 1, max_level = 10, xp_per_level = 300 },   -- Levels 1-10
+    tier_2 = { min_level = 11, max_level = 20, xp_per_level = 500 },  -- Levels 11-20
+    tier_3 = { min_level = 21, max_level = math.huge, xp_per_level = 1000 }, -- Levels 21+
+  },
+
+  -- Customize XP rewards (optional)
+  xp_rewards = {
+    char = 1,   -- XP per character typed
+    line = 1,   -- XP per new line
+    save = 50,  -- XP per file save
+  },
+})
+-----------------------------------------------------------------------------------
+--LUXTERM
+require("luxterm").setup({
+  -- Manager window dimensions (0.1 to 1.0)
+  manager_width = 0.8,          -- 80% of screen width
+  manager_height = 0.8,         -- 80% of screen height
+  
+  -- Enable live preview pane
+  preview_enabled = true,
+  
+  -- Focus new sessions when created via :LuxtermNew
+  focus_on_create = false,
+  
+  -- Auto-hide floating windows when cursor leaves
+  auto_hide = true,
+  
+  -- Keybinding configuration
+  keymaps = {
+    toggle_manager = "<C-/>",     -- Toggle session manager
+    next_session = "<C-k>",       -- Next session keybinding
+    prev_session = "<C-j>",       -- Previous session keybinding
+    global_session_nav = false,   -- Enable global session navigation
+  }
+})
+-----------------------------------------------------------------------------------
+--NOTES
+require('telekasten').setup({
+  home = vim.fn.expand("$HOME/zettelkasten"), -- Put the name of your notes directory here
+})
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
