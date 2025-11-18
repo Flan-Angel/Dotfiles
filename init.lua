@@ -1,13 +1,15 @@
 --here we fucking go again
 
------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.cmd("set expandtab")
 vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
-vim.cmd("set number")
+vim.cmd("set rnu")
+vim.cmd("set nu")
+
 
 --
 --KEYBINDS  
@@ -17,6 +19,20 @@ vim.cmd("set number")
 --
 --
 --
+--Bufferline
+--
+vim.keymap.set('n', '<leader>z1', 'require("lazy").setup(plugins)<cmd>BufferLineGoToBuffer 1 <cr>')
+vim.keymap.set('n', '<leader>z2', '<cmd>BufferLineGoToBuffer 2 <cr>')
+vim.keymap.set('n', '<leader>z3', '<cmd>BufferLineGoToBuffer 3 <cr>')
+vim.keymap.set('n', '<leader>z4', '<cmd>BufferLineGoToBuffer 4 <cr>')
+vim.keymap.set('n', '<leader>z5', '<cmd>BufferLineGoToBuffer 5 <cr>')
+vim.keymap.set('n', '<leader>z6', '<cmd>BufferLineGoToBuffer 6 <cr>')
+vim.keymap.set('n', '<leader>z7', '<cmd>BufferLineGoToBuffer 7 <cr>')
+vim.keymap.set('n', '<leader>z8', '<cmd>BufferLineGoToBuffer 8 <cr>')
+vim.keymap.set('n', '<leader>z9', '<cmd>BufferLineGoToBuffer 9 <cr>')
+--
+vim.keymap.set('n', '<leader>e', '<cmd>BufferLineCycleNext <cr>')
+vim.keymap.set('n', '<leader>q', '<cmd>BufferLineCycleNext <cr>')
 --Games 
 vim.keymap.set('n', '<leader>Gp', '<cmd>Playtime <cr>')
 vim.keymap.set('n', '<leader>Gs', '<cmd>Sudoku <cr>')
@@ -25,6 +41,7 @@ vim.keymap.set('n', '<leader>Gt', '<cmd>Tetris <cr>')
 vim.keymap.set('n', '<leader>Gr', '<cmd>CellularAutomaton make_it_rain <cr>')
 vim.keymap.set('n', '<leader>Gl', '<cmd>CellularAutomaton game_of_life <cr>')
 --
+vim.keymap.set('n', '<leader>R', '<cmd>RunCode <cr>')
 vim.keymap.set('n', '<leader>.', '<cmd>split <cr>')
 vim.keymap.set('n', '<leader>,', '<cmd>vsplit <cr>')
 vim.keymap.set('n', '<F7>', '<cmd>SunglassesEnableToggle <cr>')
@@ -62,35 +79,35 @@ local plugins = {
   },
   {"dgox16/oldworld.nvim",
   lazy = false},
-  {"maxmx03/fluoromachine.nvim",
+  {"maxmx03/fluoromachine.nvim", 
   lazy = false},
-  {"catppuccin/nvim",
-  lazy =false},
-  {"EdenEast/nightfox.nvim",
+  {"catppuccin/nvim", 
   lazy = false},
-  {"eldritch-theme/eldritch.nvim",
+  {"EdenEast/nightfox.nvim", 
   lazy = false},
-  {"shaunsingh/moonlight.nvim",
+  {"eldritch-theme/eldritch.nvim", 
   lazy = false},
-  {"ficcdaf/ashen.nvim", 
+  {"shaunsingh/moonlight.nvim", 
   lazy = false},
-  {"sekke276/dark_flat.nvim", 
+  {"ficcdaf/ashen.nvim",  
   lazy = false},
-  {"sainnhe/everforest",
+  {"sekke276/dark_flat.nvim",  
   lazy = false},
-  {"uhs-robert/oasis.nvim",
+  {"sainnhe/everforest", 
   lazy = false},
-  {"wurli/cobalt.nvim",
+  {"uhs-robert/oasis.nvim", 
+  lazy = false},
+  {"wurli/cobalt.nvim", 
   lazy = false,},
-  {"everviolet/nvim", name = 'evergarden',
+  {"everviolet/nvim", name = 'evergarden', 
   lazy = false},
-  { "zootedb0t/citruszest.nvim",
+  { "zootedb0t/citruszest.nvim", 
   lazy = false,},
-  {"samharju/serene.nvim",
+  {"samharju/serene.nvim", 
   lazy = false,},
 
 --TREESITTER
-  {"nvim-treesitter/nvim-treesitter", branch = 'master', lazy = false, build = ":TSUpdate"},
+  {"nvim-treesitter/nvim-treesitter", branch = 'main', lazy = false, build = ":TSUpdate"},
 
 --WHICHKEY
   {
@@ -112,6 +129,7 @@ local plugins = {
 
 --TELESCOPE
   {
+    lazy = true,
     'nvim-telescope/telescope.nvim', tag = '0.1.8',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
@@ -171,6 +189,105 @@ local plugins = {
     dependencies = { 'nvim-tree/nvim-web-devicons' }
   },
 
+{
+    "xzbdmw/colorful-menu.nvim",
+    config = function()
+        -- You don't need to set these options.
+        require("colorful-menu").setup({
+            ls = {
+                lua_ls = {
+                    -- Maybe you want to dim arguments a bit.
+                    arguments_hl = "@comment",
+                },
+                gopls = {
+                    -- By default, we render variable/function's type in the right most side,
+                    -- to make them not to crowd together with the original label.
+
+                    -- when true:
+                    -- foo             *Foo
+                    -- ast         "go/ast"
+
+                    -- when false:
+                    -- foo *Foo
+                    -- ast "go/ast"
+                    align_type_to_right = true,
+                    -- When true, label for field and variable will format like "foo: Foo"
+                    -- instead of go's original syntax "foo Foo". If align_type_to_right is
+                    -- true, this option has no effect.
+                    add_colon_before_type = false,
+                    -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+                    preserve_type_when_truncate = true,
+                },
+                -- for lsp_config or typescript-tools
+                ts_ls = {
+                    -- false means do not include any extra info,
+                    -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
+                    extra_info_hl = "@comment",
+                },
+                vtsls = {
+                    -- false means do not include any extra info,
+                    -- see https://github.com/xzbdmw/colorful-menu.nvim/issues/42
+                    extra_info_hl = "@comment",
+                },
+                ["rust-analyzer"] = {
+                    -- Such as (as Iterator), (use std::io).
+                    extra_info_hl = "@comment",
+                    -- Similar to the same setting of gopls.
+                    align_type_to_right = true,
+                    -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+                    preserve_type_when_truncate = true,
+                },
+                clangd = {
+                    -- Such as "From <stdio.h>".
+                    extra_info_hl = "@comment",
+                    -- Similar to the same setting of gopls.
+                    align_type_to_right = true,
+                    -- the hl group of leading dot of "•std::filesystem::permissions(..)"
+                    import_dot_hl = "@comment",
+                    -- See https://github.com/xzbdmw/colorful-menu.nvim/pull/36
+                    preserve_type_when_truncate = true,
+                },
+                zls = {
+                    -- Similar to the same setting of gopls.
+                    align_type_to_right = true,
+                },
+                roslyn = {
+                    extra_info_hl = "@comment",
+                },
+                dartls = {
+                    extra_info_hl = "@comment",
+                },
+                -- The same applies to pyright/pylance
+                basedpyright = {
+                    -- It is usually import path such as "os"
+                    extra_info_hl = "@comment",
+                },
+                pylsp = {
+                    extra_info_hl = "@comment",
+                    -- Dim the function argument area, which is the main
+                    -- difference with pyright.
+                    arguments_hl = "@comment",
+                },
+                -- If true, try to highlight "not supported" languages.
+                fallback = true,
+                -- this will be applied to label description for unsupport languages
+                fallback_extra_info_hl = "@comment",
+            },
+            -- If the built-in logic fails to find a suitable highlight group for a label,
+            -- this highlight is applied to the label.
+            fallback_highlight = "@variable",
+            -- If provided, the plugin truncates the final displayed text to
+            -- this width (measured in display cells). Any highlights that extend
+            -- beyond the truncation point are ignored. When set to a float
+            -- between 0 and 1, it'll be treated as percentage of the width of
+            -- the window: math.floor(max_width * vim.api.nvim_win_get_width(0))
+            -- Default 60.
+            max_width = 60,
+        })
+    end,
+},
+
+
 --BLINK.CMP (auto complete suggestions)
   {
   'saghen/blink.cmp',
@@ -189,8 +306,10 @@ local plugins = {
     -- C-k: Toggle signature help (if signature.enabled = true)
     --
     -- See :h blink-cmp-config-keymap for defining your own keymap
-    keymap = { preset = 'super-tab' },
-
+    keymap = { preset = 'super-tab', 
+    ['Up'] = false,
+    ['Down'] = false
+       },
     appearance = {
       -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
       -- Adjusts spacing to ensure icons are aligned
@@ -198,25 +317,49 @@ local plugins = {
     },
 
     -- (Default) Only show the documentation popup when manually triggered
-    completion = { documentation = { auto_show = false } },
 
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
+      default = { 'lsp', 'path', 'buffer'},
     },
-
+    completion = {
+    menu = {
+                draw = {
+                    -- We don't need label_description now because label and label_description are already
+                    -- combined together in label by colorful-menu.nvim.
+                    columns = { { "kind_icon" }, { "label", gap = 1 } },
+                    components = {
+                        label = {
+                            text = function(ctx)
+                                return require("colorful-menu").blink_components_text(ctx)
+                            end,
+                            highlight = function(ctx)
+                                return require("colorful-menu").blink_components_highlight(ctx)
+                            end,
+                        },
+                    },
+                },
+            },
+    ghost_text = {
+      enabled = vim.g.ai_cmp,
+    },
+        },
     -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
     -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
     -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
     --
     -- See the fuzzy documentation for more information
-    fuzzy = { implementation = "prefer_rust_with_warning" }
+    fuzzy = { implementation = "prefer_rust_with_warning" },
+
+  
   },
   opts_extend = { "sources.default" }
   },
 
 
+
+ 
 --TROUBLE (shows errors in file or something)
   {
   "folke/trouble.nvim",
@@ -379,9 +522,11 @@ local plugins = {
 --MISC
 { "CRAG666/code_runner.nvim", config = true },
 
-{"rktjmp/playtime.nvim"},  
+{"rktjmp/playtime.nvim",
+ },  
 {
   'jim-fx/sudoku.nvim',
+  
   cmd = "Sudoku",
   config = function()
     require("sudoku").setup({
@@ -389,8 +534,8 @@ local plugins = {
     })
   end
 },
-{ "alec-gibson/nvim-tetris" },                                                            
-{ "ThePrimeagen/vim-be-good" },                                                         
+{ "alec-gibson/nvim-tetris"},                                                            
+{ "ThePrimeagen/vim-be-good"},                                                         
 {"eandrju/cellular-automaton.nvim"},
 
 
@@ -408,12 +553,7 @@ local plugins = {
 }
 -----------------------------------------------------------------------------------
 local opts = {
-
-
-
-
-
-}
+ }
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
@@ -428,7 +568,7 @@ local opts = {
 require("lazy").setup(plugins, opts)
 -----------------------------------------------------------------------------------
 --TREESITTER
-local config = require("nvim-treesitter.configs")
+local config = require("nvim-treesitter.config")
  config.setup ({
    ensure_installed = { "c", "bash", "lua", "cmake", "gdscript", "hyprlang", "asm", "python", "cpp", "dockerfile", "vim", "vimdoc" },
    highlight = { enable = true },
@@ -488,23 +628,13 @@ require("noice").setup({
   },
   -- you can enable a preset for easier configuration
   presets = {
-    bottom_search = true, -- use a classic bottom cmdline for search
+    bottom_search = false, -- use a classic bottom cmdline for search
     command_palette = true, -- position the cmdline and popupmenu together
     long_message_to_split = true, -- long messages will be sent to a split
     inc_rename = false, -- enables an input dialog for inc-rename.nvim
     lsp_doc_border = true, -- add a border to hover docs and signature help
   },
 })
-
-  local noice = require("noice")
-  noice.setup({
-    routes = {
-      {
-        view = "notify",
-        filter = { event = "msg_showmode" },
-      }, 
-    },
-  })
 
 -----------------------------------------------------------------------------------
 --BUFFERLINE
@@ -530,7 +660,7 @@ require('lualine').setup {
       statusline = 1000,
       tabline = 1000,
       winbar = 1000,
-      refresh_time = 16, -- ~60fps
+      refresh_time = 4, -- ~60fps
       events = {
         'WinEnter',
         'BufEnter',
@@ -549,7 +679,13 @@ require('lualine').setup {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {'filename'},
-    lualine_x = { },
+    lualine_x = {
+       {
+        require("noice").api.statusline.mode.get,
+        cond = require("noice").api.statusline.mode.has,
+        color = { fg = "#ff9e64" },
+      }
+    },
     lualine_y = {'progress'},
     lualine_z = {'location'}
   },
