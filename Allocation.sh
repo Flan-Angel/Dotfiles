@@ -3,7 +3,7 @@ set -euo pipefail
 #this script replaces your dot files with mine, do not run unless you have a backup
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-
+cp $HOME/.config $HOME/CONFIG_BACKUPS
 
 #hyprland
 if test -d $HOME/.config/hypr; then
@@ -33,20 +33,6 @@ else
 fi
 
 
-#nvim
-if test -d $HOME/.config/nvim; then
-  if test -e $HOME/.config/nvim/init.lua; then
-    rm $HOME/.config/nvim/init.lua
-    cp $SCRIPT_DIR/init.lua $HOME/.config/nvim/init.lua 
-  else
-    cp $SCRIPT_DIR/init.lua $HOME/.config/nvim/init.lua 
-  fi
-else
-  mkdir $HOME/.config/nvim
-  cp $SCRIPT_DIR/init.lua $HOME/.config/nvim/init.lua 
-fi
-
-
 #kitty 
 if test -d $HOME/.config/kitty; then
   if test -e $HOME/.config/kitty/kitty.conf; then
@@ -59,6 +45,41 @@ else
   mkdir $HOME/.config/kitty
   cp $SCRIPT_DIR/kitty.conf $HOME/.config/kitty.conf
 fi
+
+
+#VIMPL
+if test -d $HOME/.config/nvim-simpl; then
+  if test -e $HOME/.config/nvim-simpl/init.lua; then
+    rm $HOME/.config/nvim-simpl/init.lua
+    cp $SCRIPT_DIR/simpl.lua $HOME/.config/nvim-simpl/
+    mv $HOME/.config/nvim-simpl/simpl.lua $HOME/.config/nvim-simpl/init.lua
+  else
+    cp $SCRIPT_DIR/simpl.lua $HOME/.config/nvim-simpl/
+    mv $HOME/.config/nvim-simpl/simpl.lua $HOME/.config/nvim-simpl/init.lua
+  fi
+else
+  mkdir $HOME/.config/nvim-simpl
+  cp $SCRIPT_DIR/simpl.lua $HOME/.config/nvim-simpl/
+  mv $HOME/.config/nvim-simpl/simpl.lua $HOME/.config/nvim-simpl/init.lua
+fi
+
+#Vimjelo
+if test -d $HOME/.config/nvim-jelo; then
+  if test -e $HOME/.config/nvim-jelo/init.lua; then
+    rm $HOME/.config/nvim-simpl/init.lua
+    cp $SCRIPT_DIR/jelo.lua $HOME/.config/nvim-jelo/
+    mv $HOME/.config/nvim-jelo/jelo.lua $HOME/.config/nvim-jelo/init.lua
+  else
+    cp $SCRIPT_DIR/jelo.lua $HOME/.config/nvim-jelo/
+    mv $HOME/.config/nvim-jelo/jelo.lua $HOME/.config/nvim-jelo/init.lua
+  fi
+else
+  mkdir $HOME/.config/nvimjelo-
+  cp $SCRIPT_DIR/jelo.lua $HOME/.config/nvim-jelo/
+  mv $HOME/.config/nvim-jelo/jelo.lua $HOME/.config/nvim-jelo/init.lua
+fi
+
+
 
 #rest of the files
 cp $SCRIPT_DIR/Absinthe.qbtheme $HOME/.config/
