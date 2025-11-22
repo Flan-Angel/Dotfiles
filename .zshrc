@@ -6,7 +6,11 @@ export GTK_THEME=Adwaita:dark
 
 #source ~/Scripts/my-enviroment.sh
 
+setopt CORRECT
 ##############################################
+#Nvim
+alias vimpl='NVIM_APPNAME=nvim-simpl \nvim'
+alias nvim='NVIM_APPNAME=nvim-jelo nvim'
 #POWER PROFILES DAEMON
 ##############################################
 alias perfor='powerprofilesctl set performance'
@@ -32,6 +36,7 @@ alias upzsh='source ~/.zshrc'
 ############################################
 #COOL SHIT
 ############################################
+alias cat='bat'
 alias ff='fastfetch -l "arch2"'
 alias pink='ping archlinux.org'
 alias btu="bluetui"
