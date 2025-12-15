@@ -10,6 +10,12 @@ vim.cmd("set shiftwidth=2")
 vim.cmd("set rnu")
 vim.cmd("set nu")
 
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+
 
 --
 --KEYBINDS  
@@ -19,17 +25,18 @@ vim.cmd("set nu")
 --
 --
 --
+vim.keymap.set('n', '<leader>Z', '<cmd>ZenMode <cr>')
 --Bufferline
 --
-vim.keymap.set('n', '<leader>z1', 'require("lazy").setup(plugins)<cmd>BufferLineGoToBuffer 1 <cr>')
-vim.keymap.set('n', '<leader>z2', '<cmd>BufferLineGoToBuffer 2 <cr>')
-vim.keymap.set('n', '<leader>z3', '<cmd>BufferLineGoToBuffer 3 <cr>')
-vim.keymap.set('n', '<leader>z4', '<cmd>BufferLineGoToBuffer 4 <cr>')
-vim.keymap.set('n', '<leader>z5', '<cmd>BufferLineGoToBuffer 5 <cr>')
-vim.keymap.set('n', '<leader>z6', '<cmd>BufferLineGoToBuffer 6 <cr>')
-vim.keymap.set('n', '<leader>z7', '<cmd>BufferLineGoToBuffer 7 <cr>')
-vim.keymap.set('n', '<leader>z8', '<cmd>BufferLineGoToBuffer 8 <cr>')
-vim.keymap.set('n', '<leader>z9', '<cmd>BufferLineGoToBuffer 9 <cr>')
+vim.keymap.set('n', '<leader>1', 'require("lazy").setup(plugins)<cmd>BufferLineGoToBuffer 1 <cr>')
+vim.keymap.set('n', '<leader>2', '<cmd>BufferLineGoToBuffer 2 <cr>')
+vim.keymap.set('n', '<leader>3', '<cmd>BufferLineGoToBuffer 3 <cr>')
+vim.keymap.set('n', '<leader>4', '<cmd>BufferLineGoToBuffer 4 <cr>')
+vim.keymap.set('n', '<leader>5', '<cmd>BufferLineGoToBuffer 5 <cr>')
+vim.keymap.set('n', '<leader>6', '<cmd>BufferLineGoToBuffer 6 <cr>')
+vim.keymap.set('n', '<leader>7', '<cmd>BufferLineGoToBuffer 7 <cr>')
+vim.keymap.set('n', '<leader>8', '<cmd>BufferLineGoToBuffer 8 <cr>')
+vim.keymap.set('n', '<leader>9', '<cmd>BufferLineGoToBuffer 9 <cr>')
 --
 vim.keymap.set('n', '<leader>e', '<cmd>BufferLineCycleNext <cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>BufferLineCycleNext <cr>')
@@ -44,7 +51,7 @@ vim.keymap.set('n', '<leader>Gl', '<cmd>CellularAutomaton game_of_life <cr>')
 vim.keymap.set('n', '<leader>R', '<cmd>RunCode <cr>')
 vim.keymap.set('n', '<leader>.', '<cmd>split <cr>')
 vim.keymap.set('n', '<leader>,', '<cmd>vsplit <cr>')
-vim.keymap.set('n', '<F7>', '<cmd>SunglassesEnableToggle <cr>')
+vim.keymap.set('n', '<leader>/', '<cmd>SunglassesEnableToggle <cr>')
 vim.keymap.set('n', '<leader>j', '<cmd>:LuxtermToggle <cr>')
 vim.keymap.set('n', '<leader>N', '<cmd>Telekasten <cr>')
 vim.keymap.set('n', '<leader>n', '<cmd>Telekasten new_note<cr>')
@@ -118,7 +125,7 @@ local plugins = {
   },
   keys = {
     {
-      "<leader>h",
+      "<leader>?",
       function()
         require("which-key").show({ global = true })
       end,
@@ -130,7 +137,7 @@ local plugins = {
 --TELESCOPE
   {
     lazy = true,
-    'nvim-telescope/telescope.nvim', tag = '0.1.8',
+    'nvim-telescope/telescope.nvim', tag = 'v0.1.9',
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
 
@@ -191,6 +198,7 @@ local plugins = {
 
 {
     "xzbdmw/colorful-menu.nvim",
+  lazy = false,
     config = function()
         -- You don't need to set these options.
         require("colorful-menu").setup({
@@ -291,7 +299,8 @@ local plugins = {
 --BLINK.CMP (auto complete suggestions)
   {
   'saghen/blink.cmp',
-  dependencies = { 'rafamadriz/friendly-snippets' },
+  dependencies = { 'rafamadriz/friendly-snippets',
+                    'xzbdmw/colorful-menu.nvim' },
   version = '1.*',
   opts = {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
@@ -311,8 +320,6 @@ local plugins = {
     ['Down'] = false
        },
     appearance = {
-      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- Adjusts spacing to ensure icons are aligned
       nerd_font_variant = 'mono'
     },
 
@@ -321,28 +328,11 @@ local plugins = {
     -- Default list of enabled providers defined so that you can extend it
     -- elsewhere in your config, without redefining it, due to `opts_extend`
     sources = {
-      default = { 'lsp', 'path', 'buffer'},
+      default = { 'lsp', 'path', 'buffer', 'snippets'},
     },
     completion = {
-    menu = {
-                draw = {
-                    -- We don't need label_description now because label and label_description are already
-                    -- combined together in label by colorful-menu.nvim.
-                    columns = { { "kind_icon" }, { "label", gap = 1 } },
-                    components = {
-                        label = {
-                            text = function(ctx)
-                                return require("colorful-menu").blink_components_text(ctx)
-                            end,
-                            highlight = function(ctx)
-                                return require("colorful-menu").blink_components_highlight(ctx)
-                            end,
-                        },
-                    },
-                },
-            },
-    ghost_text = {
-      enabled = vim.g.ai_cmp,
+     ghost_text = { enabled = true },
+
     },
         },
     -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
@@ -353,7 +343,7 @@ local plugins = {
     fuzzy = { implementation = "prefer_rust_with_warning" },
 
   
-  },
+  
   opts_extend = { "sources.default" }
   },
 
@@ -548,9 +538,19 @@ local plugins = {
 },
 
 
+{
+  "folke/zen-mode.nvim",
+  opts = {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+},
 
 
-}
+
+
+  }
 -----------------------------------------------------------------------------------
 local opts = {
  }
@@ -570,7 +570,7 @@ require("lazy").setup(plugins, opts)
 --TREESITTER
 local config = require("nvim-treesitter.config")
  config.setup ({
-   ensure_installed = { "c", "bash", "lua", "cmake", "gdscript", "hyprlang", "asm", "python", "cpp", "dockerfile", "vim", "vimdoc" },
+   ensure_installed = { "c", "bash", "lua", "cmake", "gdscript", "html", "hyprlang", "asm", "python", "cpp", "dockerfile", "vim", "vimdoc" },
    highlight = { enable = true },
    indent = { enable = true },
  })
@@ -609,12 +609,12 @@ require "telescope".setup {
 }
 --
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>f', builtin.find_files, {desc = 'find files'})
+vim.keymap.set('n', '<leader>O', builtin.find_files, {desc = 'find files'})
 vim.keymap.set('n', '<leader>l', builtin.live_grep,  {desc = 'live grep'})
 vim.keymap.set('n', '<leader>t', builtin.colorscheme, {desc = 'switch colorscheme'})
 vim.keymap.set('n', '<leader>m', builtin.man_pages, {desc = 'Man-Pages'})
-vim.keymap.set('n', '<leader>k', builtin.keymaps, {desc = 'Keymaps? why tho'})
-vim.keymap.set('n', '<leader>r', builtin.registers, {desc = 'registers/system clipboard'})
+vim.keymap.set('n', '<leader>c', builtin.registers, {desc = 'registers/system clipboard'})
+vim.keymap.set('n', '<leader>s', builtin.pickers, {desc = 'Find in currently open file'})
 -----------------------------------------------------------------------------------
 --NOICE GUI
 require("noice").setup({
@@ -630,7 +630,7 @@ require("noice").setup({
   presets = {
     bottom_search = false, -- use a classic bottom cmdline for search
     command_palette = true, -- position the cmdline and popupmenu together
-    long_message_to_split = true, -- long messages will be sent to a split
+    long_message_to_split = false, -- long messages will be sent to a split
     inc_rename = false, -- enables an input dialog for inc-rename.nvim
     lsp_doc_border = true, -- add a border to hover docs and signature help
   },
@@ -707,8 +707,55 @@ require('lualine').setup {
 require("triforce").setup({
   enabled = true,              -- Enable/disable the entire plugin
   gamification_enabled = true, -- Enable XP, levels, achievements
+-----------------------------------------------------------------------------------
+---BLINKCMP
 
-  -- Notification settings
+  {
+  'saghen/blink.cmp',
+  dependencies = {
+    'rafamadriz/friendly-snippets',
+    'xzbdmw/colorful-menu.nvim', -- make sure this is loaded before blink.cmp
+  },
+  version = '1.*',
+  event = "InsertEnter",
+  opts = {
+    keymap = { preset = 'super-tab' },
+
+    appearance = {
+      nerd_font_variant = 'mono', -- perfect alignment
+    },
+
+    sources = {
+      default = { 'lsp', 'path', 'buffer', 'snippets' },
+    },
+
+    windows = {
+      autocomplete = {
+        draw = {
+          columns = { { "kind_icon", gap = 1 }, { "label" } },
+          components = {
+            kind_icon = {
+              text = function(ctx) return ctx.kind_icon .. " " end,
+              highlight = function(ctx) return ctx.kind_hl end,
+            },
+            label = {
+              text = function(ctx)
+                return require("colorful-menu").blink_components_text(ctx)
+              end,
+              highlight = function(ctx)
+                return require("colorful-menu").blink_components_highlight(ctx)
+              end,
+            },
+          },
+        },
+      },
+      documentation = { auto_show = true },
+      signature = { enabled = true },
+    },
+
+    fuzzy = { implementation = "prefer_rust_with_warning" },
+  },
+},-- Notification settings
   notifications = {
     enabled = true,       -- Master toggle for all notifications
     level_up = true,      -- Show level up notifications
@@ -762,7 +809,7 @@ require("luxterm").setup({
   
   -- Keybinding configuration
   keymaps = {
-    toggle_manager = "<C-/>",     -- Toggle session manager
+    toggle_manager = "<leader>T",     -- Toggle session manager
     next_session = "<C-k>",       -- Next session keybinding
     prev_session = "<C-j>",       -- Previous session keybinding
     global_session_nav = false,   -- Enable global session navigation
@@ -771,7 +818,39 @@ require("luxterm").setup({
 -----------------------------------------------------------------------------------
 --NOTES
 require('telekasten').setup({
-  home = vim.fn.expand("$HOME/zettelkasten"), -- Put the name of your notes directory here
+  home = vim.fn.expand("$HOME/.config/zettelkasten"), -- Put the name of your notes directory here
+})
+-----------------------------------------------------------------------------------
+require("blink.cmp").setup({
+  appearance = {
+    kind_icons = {
+      Text = "󰉿",
+      Method = "󰆧",
+      Function = "󰊕",
+      Constructor = "",
+      Field = "󰜢",
+      Variable = "󰀫",
+      Class = "󰠱",
+      Interface = "",
+      Module = "",
+      Property = "󰜢",
+      Unit = "󰑭",
+      Value = "󰎠",
+      Enum = "",
+      Keyword = "󰌋",
+      Snippet = "",
+      Color = "󰏘",
+      File = "󰈙",
+      Reference = "󰈇",
+      Folder = "󰉋",
+      EnumMember = "",
+      Constant = "󰏿",
+      Struct = "󰙅",
+      Event = "",
+      Operator = "󰆕",
+      TypeParameter = "",
+    },
+  },
 })
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
@@ -780,5 +859,4 @@ require('telekasten').setup({
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------
------------------------------------------------------------------------------------
------------------------------------------------------------------------------------
+-----------------------------------re("lazy").setup(plugins)e-----------------------------------------------

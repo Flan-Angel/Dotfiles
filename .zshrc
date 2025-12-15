@@ -36,6 +36,8 @@ alias upzsh='source ~/.zshrc'
 ############################################
 #COOL SHIT
 ############################################
+alias cht='curl cheat.sh' #use like this: cht/bash or cht/(your topic)
+alias wtr='curl wttr.in/mumbai'
 alias cat='bat'
 alias ff='fastfetch -l "arch2"'
 alias pink='ping archlinux.org'
@@ -46,11 +48,7 @@ alias rb='reboot'
 alias byemom='shutdown now'
 
 ############################################
-
-
-
-
-alias ls='ls --color=auto'
+alias ls='ls -lah --color=auto'
 alias grep='grep --color=auto'
 
 PROMPT='%n %* %~}$ '

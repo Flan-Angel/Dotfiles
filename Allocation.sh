@@ -1,4 +1,4 @@
-#!/bim/env bash
+#!/bin/env bash
 set -euo pipefail 
 #this script replaces your dot files with mine, do not run unless you have a backup
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )

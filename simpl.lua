@@ -1,8 +1,7 @@
---got tired of the previous config, too complicated for me.
---SIMPL NVIM
+-- My other NVim config was too distracting for me. So I made a new one
 
 vim.cmd("colorscheme habamax")
---KEYBINDSa
+--KEYBINDS
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.cmd("set expandtab")
@@ -12,15 +11,21 @@ vim.cmd("set shiftwidth=2")
 vim.cmd("set rnu")
 vim.cmd("set nu")
 
-vim.keymap.set('n', '<leader>z1', 'require("lazy").setup(plugins)<cmd>BufferLineGoToBuffer 1 <cr>')
-vim.keymap.set('n', '<leader>z2', '<cmd>BufferLineGoToBuffer 2 <cr>')
-vim.keymap.set('n', '<leader>z3', '<cmd>BufferLineGoToBuffer 3 <cr>')
-vim.keymap.set('n', '<leader>z4', '<cmd>BufferLineGoToBuffer 4 <cr>')
-vim.keymap.set('n', '<leader>z5', '<cmd>BufferLineGoToBuffer 5 <cr>')
-vim.keymap.set('n', '<leader>z6', '<cmd>BufferLineGoToBuffer 6 <cr>')
-vim.keymap.set('n', '<leader>z7', '<cmd>BufferLineGoToBuffer 7 <cr>')
-vim.keymap.set('n', '<leader>z8', '<cmd>BufferLineGoToBuffer 8 <cr>')
-vim.keymap.set('n', '<leader>z9', '<cmd>BufferLineGoToBuffer 9 <cr>')
+vim.keymap.set("n", "<C-h>", "<C-w>h")
+vim.keymap.set("n", "<C-j>", "<C-w>j")
+vim.keymap.set("n", "<C-k>", "<C-w>k")
+vim.keymap.set("n", "<C-l>", "<C-w>l")
+
+vim.keymap.set('n', '<leader>Z', '<cmd>ZenMode <cr>')
+vim.keymap.set('n', '<leader>1', '<cmd>BufferLineGoToBuffer 1 <cr>')
+vim.keymap.set('n', '<leader>2', '<cmd>BufferLineGoToBuffer 2 <cr>')
+vim.keymap.set('n', '<leader>3', '<cmd>BufferLineGoToBuffer 3 <cr>')
+vim.keymap.set('n', '<leader>4', '<cmd>BufferLineGoToBuffer 4 <cr>')
+vim.keymap.set('n', '<leader>5', '<cmd>BufferLineGoToBuffer 5 <cr>')
+vim.keymap.set('n', '<leader>6', '<cmd>BufferLineGoToBuffer 6 <cr>')
+vim.keymap.set('n', '<leader>7', '<cmd>BufferLineGoToBuffer 7 <cr>')
+vim.keymap.set('n', '<leader>8', '<cmd>BufferLineGoToBuffer 8 <cr>')
+vim.keymap.set('n', '<leader>9', '<cmd>BufferLineGoToBuffer 9 <cr>')
 --
 vim.keymap.set('n', '<leader>e', '<cmd>BufferLineCycleNext <cr>')
 vim.keymap.set('n', '<leader>q', '<cmd>BufferLineCycleNext <cr>')
@@ -28,7 +33,7 @@ vim.keymap.set('n', '<leader>q', '<cmd>BufferLineCycleNext <cr>')
 vim.keymap.set('n', '<leader>R', '<cmd>RunCode <cr>')
 vim.keymap.set('n', '<leader>.', '<cmd>split <cr>')
 vim.keymap.set('n', '<leader>,', '<cmd>vsplit <cr>')
-vim.keymap.set('n', '<F7>', '<cmd>SunglassesEnableToggle <cr>')
+vim.keymap.set('n', '<leader>/', '<cmd>SunglassesEnableToggle <cr>')
 vim.keymap.set('n', '<leader>j', '<cmd>:LuxtermToggle <cr>')
 vim.keymap.set('n', '<leader>N', '<cmd>Telekasten <cr>')
 vim.keymap.set('n', '<leader>n', '<cmd>Telekasten new_note<cr>')
@@ -84,7 +89,7 @@ local plugins = {
   },
   keys = {
     {
-      "<leader>h",
+      "<leader>?",
       function()
         require("which-key").show({ global = true })
       end,
@@ -137,11 +142,11 @@ local plugins = {
  {'akinsho/bufferline.nvim', version = "*", dependencies = 'nvim-tree/nvim-web-devicons'},
 
 
---LUALINE
-  {
-    'nvim-lualine/lualine.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' }
-  },
+----LUALINE
+--  {
+--    'nvim-lualine/lualine.nvim',
+--    dependencies = { 'nvim-tree/nvim-web-devicons' }
+--  },
 
 --TRIFORCE
 {
@@ -170,7 +175,7 @@ local plugins = {
       preview_enabled = true,
       auto_hide = true,
       keymaps = {
-        toggle_manager = "<C-/>",
+        toggle_manager = "<leader>T",
       }
     })
   end
@@ -255,12 +260,12 @@ local plugins = {
 
 --New opyable
 --Dropnvim
-{
-  "folke/drop.nvim",
-  opts = {
-    -- ...
-  }
-},
+--{
+--  "folke/drop.nvim",
+--  opts = {
+--    -- ...
+--  }
+--},
 
 
 {
@@ -356,61 +361,61 @@ vim.keymap.set('n', '<leader>s', builtin.pickers, {desc = 'Find in currently ope
 vim.opt.termguicolors = true
 require("bufferline").setup{}
 -----------------------------------------------------------------------------------
---LUALINE
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'auto',
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
-    always_divide_middle = true,
-    always_show_tabline = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-      refresh_time = 4, -- ~60fps
-      events = {
-        'WinEnter',
-        'BufEnter',
-        'BufWritePost',
-        'SessionLoadPost',
-        'FileChangedShellPost',
-        'VimResized',
-        'Filetype',
-        'CursorMoved',
-        'CursorMovedI',
-        'ModeChanged',
-      },
-    }
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
-    lualine_x = { },
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
-}
+----LUALINE
+--require('lualine').setup {
+--  options = {
+--    icons_enabled = true,
+--    theme = 'auto',
+--    component_separators = { left = '', right = ''},
+--    section_separators = { left = '', right = ''},
+--    disabled_filetypes = {
+--      statusline = {},
+--      winbar = {},
+--    },
+--    ignore_focus = {},
+--    always_divide_middle = true,
+--    always_show_tabline = true,
+--    globalstatus = false,
+--    refresh = {
+--      statusline = 1000,
+--      tabline = 1000,
+--      winbar = 1000,
+--      refresh_time = 4, -- ~60fps
+--      events = {
+--        'WinEnter',
+--        'BufEnter',
+--        'BufWritePost',
+--        'SessionLoadPost',
+--        'FileChangedShellPost',
+--        'VimResized',
+--        'Filetype',
+--        'CursorMoved',
+--        'CursorMovedI',
+--        'ModeChanged',
+--      },
+--    }
+--  },
+--  sections = {
+--    lualine_a = {'mode'},
+--    lualine_b = {'branch', 'diff', 'diagnostics'},
+--    lualine_c = {'filename'},
+--    lualine_x = { },
+--    lualine_y = {'progress'},
+--    lualine_z = {'location'}
+--  },
+--  inactive_sections = {
+--    lualine_a = {},
+--    lualine_b = {},
+--    lualine_c = {'filename'},
+--    lualine_x = {'location'},
+--    lualine_y = {},
+--    lualine_z = {}
+--  },
+--  tabline = {},
+--  winbar = {},
+--  inactive_winbar = {},
+--  extensions = {}
+--}
 -----------------------------------------------------------------------------------
 --TRIFORCE
 require("triforce").setup({
@@ -516,7 +521,7 @@ require("luxterm").setup({
   
   -- Keybinding configuration
   keymaps = {
-    toggle_manager = "<C-/>",     -- Toggle session manager
+    toggle_manager = "<leader>T",     -- Toggle session manager
     next_session = "<C-k>",       -- Next session keybinding
     prev_session = "<C-j>",       -- Previous session keybinding
     global_session_nav = false,   -- Enable global session navigation
