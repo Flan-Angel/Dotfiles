@@ -17,8 +17,8 @@ cp $HOME/.config/kitty/kitty.conf $SCRIPT_DIR/kitty.conf
 
 
 cp $HOME/.config/nvim-simpl/init.lua $SCRIPT_DIR/simpl.lua
-cp $HOME/.config/nvim-jelo/init.lua $SCRIPT_DIR/init.lua
-
+cp $HOME/.config/nvim-jelo/init.lua $SCRIPT_DIR/jelo.lua
+cp $HOME/.config/nvim/init.vim $SCRIPT_DIR/init.vim
 
 cp $HOME/.zshrc $SCRIPT_DIR/.zshrc
 
